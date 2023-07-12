@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/main_layout.html">
+    <div layout:fragment="siteContent">
+        <div class="row">
+            <div class="col-6 mx-auto">
+                <!--Creating a new category button and form-->
+                <form th:action="@{/new-category}" method="post">
+                    <button type="button" class="btn btn-link text-decoration-none text-dark fw-bold mb-3"
+                            data-bs-toggle="modal" data-bs-target="#newCat">
+                        + New category
+                    </button>
+                    <div class="modal fade" id="newCat" tabindex="-1" aria-labelledby="newCatLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="newCatLabel">Add new category</h1>
+                                    <button type="button" class="btn-close"
+                                            data-bs-dismiss="modal" aria-label="Close">
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <label class="mb-2">Category name</label>
+                                    <input type="text" class="form-control" required name="name"
+                                           placeholder="Enter category name">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        Close
+                                    </button>
+                                    <button class="btn btn-primary">Add category</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <!--Display all categories with Change name and Delete buttons-->
+                <table class="table table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>NAME</th>
+                        <th>CHANGE NAME</th>
+                        <th>DELETE</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="cat : ${categories}">
+                            <td th:text="${cat.id}"></td>
+                            <td th:text="${cat.name}"></td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm"
+                                        data-bs-target="#changeCatName" data-bs-toggle="modal"
+                                        th:attr="data-bs-target='#changeCatName'+${cat.id}">
+                                    Change name
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger btn-sm"
+                                        data-bs-target="#deleteCat" data-bs-toggle="modal"
+                                        th:attr="data-bs-target='#deleteCat'+${cat.id}">
+                                    Delete category
+                                </button>
+                            </td>
+                            <!--Change category name modal-->
+                            <div class="modal changeCatName" th:id="changeCatName+${cat.id}"
+                                 data-bs-backdrop="static" data-bs-keyboard="false"
+                                 tabindex="-1" aria-labelledby="deleteCatNameLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form th:action="@{'/change-category-name'}" method="post">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="changeCatNameLabel">
+                                                    Change category name
+                                                </h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <input type="hidden" name="id" th:value="${cat.id}">
+                                                <label>Category name</label>
+                                                <input type="text" class="form-control" required name="name"
+                                                       th:value="${cat.name}">
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-primary">Change name</button>
+                                                <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">
+                                                    Close
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Delete category modal-->
+                            <div class="modal deleteCat" th:id="deleteCat+${cat.id}" data-bs-backdrop="static"
+                                 data-bs-keyboard="false"
+                                 tabindex="-1" aria-labelledby="deleteCatLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form th:action="@{'/delete-category'}" method="post">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="deleteCatLabel">
+                                                    Delete category
+                                                </h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <input type="hidden" name="cat_id" th:value="${cat.id}">
+                                                <h3 class="text-center">Are you sure?</h3>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-danger btn-sm">Delete category</button>
+                                                <button type="button" class="btn btn-secondary btn-sm"
+                                                        data-bs-dismiss="modal">
+                                                    Close
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</html>
